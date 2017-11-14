@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Dmitry Sazonov](https://up.htmlacademy.ru/javascript/11/user/424561).
-* Наставник: `Неизвестно`.
+* Наставник: [Алексей Балесный].
 
 ---
 

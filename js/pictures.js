@@ -1,8 +1,12 @@
 'use strict';
 
-var NUMBER_OF_PICTURES = 24;
+var NUMBER_OF_PICTURES = 25;
 var MIN_COUNT_OF_LIKES = 15;
 var MAX_COUNT_OF_LIKES = 200;
+
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+
 var USER_COMMENTS = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -70,5 +74,49 @@ pictureContainer.appendChild(fragment);
 document.querySelector('.upload-overlay').classList.add('hidden');
 
 var galleryOverlay = document.querySelector('.gallery-overlay');
-galleryOverlay.classList.remove('hidden');
-setupPictureElement(galleryOverlay, '.gallery-overlay-image', '.likes-count', '.comments-count', pictures[0]);
+
+var fillOverlay = function (picture) {
+  galleryOverlay.querySelector('.gallery-overlay-image').src = picture.querySelector('img').src;
+  galleryOverlay.querySelector('.likes-count').textContent = picture.querySelector('.picture-likes').textContent;
+  galleryOverlay.querySelector('.comments-count').textContent = picture.querySelector('.picture-comments').textContent;
+};
+
+var onOverlayEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeOpenOverlay();
+  }
+};
+
+var openGalleryOverlay = function (picture) {
+  fillOverlay(picture);
+  galleryOverlay.classList.remove('hidden');
+  document.addEventListener('keydown', onOverlayEscPress);
+};
+
+var closeOpenOverlay = function () {
+  galleryOverlay.classList.add('hidden');
+  document.removeEventListener('keydown', onOverlayEscPress);
+};
+
+var userPictures = document.querySelectorAll('.picture');
+
+var overlayClose = galleryOverlay.querySelector('.gallery-overlay-close');
+
+overlayClose.addEventListener('click', function () {
+  closeOpenOverlay();
+});
+
+userPictures.forEach(function (picture) {
+  picture.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    openGalleryOverlay(picture);
+  });
+  picture.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      evt.preventDefault();
+      openGalleryOverlay(picture);
+    }
+  });
+});
+
+

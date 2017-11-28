@@ -106,6 +106,12 @@ overlayClose.addEventListener('click', function () {
   closeOpenOverlay();
 });
 
+overlayClose.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closeOpenOverlay();
+  }
+});
+
 userPictures.forEach(function (picture) {
   picture.addEventListener('click', function (evt) {
     evt.preventDefault();

@@ -71,7 +71,8 @@ fillPictureContainer(fragment);
 
 pictureContainer.appendChild(fragment);
 
-document.querySelector('.upload-overlay').classList.add('hidden');
+var uploadOverlay = document.querySelector('.upload-overlay');
+uploadOverlay.classList.add('hidden');
 
 var galleryOverlay = document.querySelector('.gallery-overlay');
 
@@ -119,4 +120,33 @@ userPictures.forEach(function (picture) {
   });
 });
 
+var uploadForm = document.querySelector('#upload-select-image');
+var uploadFile = uploadForm.querySelector('#upload-file');
+var uploadCancel = uploadForm.querySelector('.upload-form-cancel');
+var uploadComment = uploadForm.querySelector('.upload-form-description');
 
+var onUploadOverlayKeyPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    if (document.activeElement !== uploadComment) {
+      closeUploadOverlay();
+      document.removeEventListener('keydown', onUploadOverlayKeyPress);
+    }
+  }
+};
+
+var openUploadOverlay = function () {
+  uploadOverlay.classList.remove('hidden');
+  document.addEventListener('keydown', onUploadOverlayKeyPress);
+};
+
+var closeUploadOverlay = function () {
+  uploadOverlay.classList.add('hidden');
+};
+
+uploadFile.addEventListener('change', function () {
+  openUploadOverlay();
+});
+
+uploadCancel.addEventListener('click', function () {
+  closeUploadOverlay();
+});

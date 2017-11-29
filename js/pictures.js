@@ -129,7 +129,7 @@ var uploadFile = uploadForm.querySelector('#upload-file');
 var uploadCancel = uploadForm.querySelector('.upload-form-cancel');
 var uploadComment = uploadForm.querySelector('.upload-form-description');
 var uploadEffect = uploadForm.querySelector('.upload-effect');
-var uploadEffectPreview = uploadForm.querySelector('.effect-image-preview');
+var uploadImagePreview = uploadForm.querySelector('.effect-image-preview');
 var uploadResizeValue = uploadForm.querySelector('.upload-resize-controls-value');
 var uploadResizeInc = uploadForm.querySelector('.upload-resize-controls-button-inc');
 var uploadResizeDec = uploadForm.querySelector('.upload-resize-controls-button-dec');
@@ -152,6 +152,10 @@ var closeUploadOverlay = function () {
   uploadOverlay.classList.add('hidden');
 };
 
+var setScaleForUploadImage = function (scaleCoeff) {
+  uploadImagePreview.style.transform = 'scale(' + scaleCoeff + ')';
+};
+
 uploadFile.addEventListener('change', function () {
   openUploadOverlay();
 });
@@ -163,21 +167,25 @@ uploadCancel.addEventListener('click', function () {
 uploadEffect.addEventListener('click', function (evt) {
   if (evt.target.type === 'radio') {
     var filterName = evt.target.id.replace('upload-', '');
-    uploadEffectPreview.className = 'effect-image-preview';
-    uploadEffectPreview.classList.add(filterName);
+    uploadImagePreview.className = 'effect-image-preview';
+    uploadImagePreview.classList.add(filterName);
   }
 });
 
 uploadResizeInc.addEventListener('click', function () {
-  var currentValue = parseInt(uploadResizeValue.value.replace('%', ''), 10);
-  if (currentValue < UPLOAD_RESIZE_MAX) {
-    uploadResizeValue.value = (currentValue + UPLOAD_RESIZE_STEP) + '%';
+  var currentScaleValue = parseInt(uploadResizeValue.value.replace('%', ''), 10);
+  if (currentScaleValue < UPLOAD_RESIZE_MAX) {
+    var newScaleValue = (currentScaleValue + UPLOAD_RESIZE_STEP);
+    uploadResizeValue.value = newScaleValue + '%';
+    setScaleForUploadImage(newScaleValue / 100);
   }
 });
 
 uploadResizeDec.addEventListener('click', function () {
-  var currentValue = parseInt(uploadResizeValue.value.replace('%', ''), 10);
-  if (currentValue > UPLOAD_RESIZE_MIN) {
-    uploadResizeValue.value = (currentValue - UPLOAD_RESIZE_STEP) + '%';
+  var currentScaleValue = parseInt(uploadResizeValue.value.replace('%', ''), 10);
+  if (currentScaleValue > UPLOAD_RESIZE_MIN) {
+    var newScaleValue = (currentScaleValue - UPLOAD_RESIZE_STEP);
+    uploadResizeValue.value = newScaleValue + '%';
+    setScaleForUploadImage(newScaleValue / 100);
   }
 });

@@ -7,6 +7,10 @@ var MAX_COUNT_OF_LIKES = 200;
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 
+var UPLOAD_RESIZE_STEP = 25;
+var UPLOAD_RESIZE_MIN = 25;
+var UPLOAD_RESIZE_MAX = 100;
+
 var USER_COMMENTS = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -120,16 +124,15 @@ userPictures.forEach(function (picture) {
   });
 });
 
-var UPLOAD_RESIZE_STEP = 25;
-var UPLOAD_RESIZE_MIN = 25;
-var UPLOAD_RESIZE_MAX = 100;
-
 var uploadForm = document.querySelector('#upload-select-image');
 var uploadFile = uploadForm.querySelector('#upload-file');
 var uploadCancel = uploadForm.querySelector('.upload-form-cancel');
 var uploadComment = uploadForm.querySelector('.upload-form-description');
 var uploadEffect = uploadForm.querySelector('.upload-effect');
 var uploadEffectPreview = uploadForm.querySelector('.effect-image-preview');
+var uploadResizeValue = uploadForm.querySelector('.upload-resize-controls-value');
+var uploadResizeInc = uploadForm.querySelector('.upload-resize-controls-button-inc');
+var uploadResizeDec = uploadForm.querySelector('.upload-resize-controls-button-dec');
 
 var onUploadOverlayKeyPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
@@ -162,5 +165,19 @@ uploadEffect.addEventListener('click', function (evt) {
     var filterName = evt.target.id.replace('upload-', '');
     uploadEffectPreview.className = 'effect-image-preview';
     uploadEffectPreview.classList.add(filterName);
+  }
+});
+
+uploadResizeInc.addEventListener('click', function () {
+  var currentValue = parseInt(uploadResizeValue.value.replace('%', ''), 10);
+  if (currentValue < UPLOAD_RESIZE_MAX) {
+    uploadResizeValue.value = (currentValue + UPLOAD_RESIZE_STEP) + '%';
+  }
+});
+
+uploadResizeDec.addEventListener('click', function () {
+  var currentValue = parseInt(uploadResizeValue.value.replace('%', ''), 10);
+  if (currentValue > UPLOAD_RESIZE_MIN) {
+    uploadResizeValue.value = (currentValue - UPLOAD_RESIZE_STEP) + '%';
   }
 });

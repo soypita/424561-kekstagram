@@ -11,6 +11,9 @@ var UPLOAD_RESIZE_STEP = 25;
 var UPLOAD_RESIZE_MIN = 25;
 var UPLOAD_RESIZE_MAX = 100;
 
+var COUNT_OF_HASH_TAGS = 5;
+var LENGTH_OF_HASH_TAG = 20;
+
 var USER_COMMENTS = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -133,6 +136,39 @@ var uploadImagePreview = uploadForm.querySelector('.effect-image-preview');
 var uploadResizeValue = uploadForm.querySelector('.upload-resize-controls-value');
 var uploadResizeInc = uploadForm.querySelector('.upload-resize-controls-button-inc');
 var uploadResizeDec = uploadForm.querySelector('.upload-resize-controls-button-dec');
+var uploadPostHashTags = uploadForm.querySelector('.upload-form-hashtags');
+
+var checkHashTags = function () {
+  var isValid = true;
+
+  var rawHashTags = uploadPostHashTags.value.split(' ');
+
+  if (rawHashTags.length === 0) {
+    isValid = false;
+  } else {
+    var isLengthOfTagValid = true;
+    var isNumberOfTagsValid = true;
+    var isFirstSymbolCorrect = true;
+
+    if (rawHashTags.length > COUNT_OF_HASH_TAGS) {
+      isNumberOfTagsValid = false;
+    }
+
+    rawHashTags.forEach(function (tag) {
+      tag.toLowerCase();
+      if (tag[0] !== '#') {
+        isFirstSymbolCorrect = false;
+      }
+      if (tag.length > LENGTH_OF_HASH_TAG) {
+        isLengthOfTagValid = false;
+      }
+    });
+
+    isValid = isLengthOfTagValid && isNumberOfTagsValid && isFirstSymbolCorrect;
+  }
+
+  return isValid;
+};
 
 var onUploadOverlayKeyPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {

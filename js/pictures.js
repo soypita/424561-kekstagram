@@ -128,6 +128,8 @@ var uploadForm = document.querySelector('#upload-select-image');
 var uploadFile = uploadForm.querySelector('#upload-file');
 var uploadCancel = uploadForm.querySelector('.upload-form-cancel');
 var uploadComment = uploadForm.querySelector('.upload-form-description');
+var uploadEffect = uploadForm.querySelector('.upload-effect');
+var uploadEffectPreview = uploadForm.querySelector('.effect-image-preview');
 
 var onUploadOverlayKeyPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
@@ -153,4 +155,12 @@ uploadFile.addEventListener('change', function () {
 
 uploadCancel.addEventListener('click', function () {
   closeUploadOverlay();
+});
+
+uploadEffect.addEventListener('click', function (evt) {
+  if (evt.target.type === 'radio') {
+    var filterName = evt.target.id.replace('upload-', '');
+    uploadEffectPreview.className = 'effect-image-preview';
+    uploadEffectPreview.classList.add(filterName);
+  }
 });

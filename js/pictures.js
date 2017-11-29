@@ -82,34 +82,34 @@ var fillOverlay = function (picture) {
   galleryOverlay.querySelector('.comments-count').textContent = picture.querySelector('.picture-comments').textContent;
 };
 
-var onOverlayKeyPress = function (evt) {
+var onGalleryOverlayKeyPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
-    closeOpenOverlay();
-    document.removeEventListener('keydown', onOverlayKeyPress);
+    closeGalleryOverlay();
+    document.removeEventListener('keydown', onGalleryOverlayKeyPress);
   }
 };
 
 var openGalleryOverlay = function (picture) {
   fillOverlay(picture);
   galleryOverlay.classList.remove('hidden');
-  document.addEventListener('keydown', onOverlayKeyPress);
+  document.addEventListener('keydown', onGalleryOverlayKeyPress);
 };
 
-var closeOpenOverlay = function () {
+var closeGalleryOverlay = function () {
   galleryOverlay.classList.add('hidden');
 };
 
 var userPictures = document.querySelectorAll('.picture');
 
-var overlayClose = galleryOverlay.querySelector('.gallery-overlay-close');
+var galleryOverlayClose = galleryOverlay.querySelector('.gallery-overlay-close');
 
-overlayClose.addEventListener('click', function () {
-  closeOpenOverlay();
+galleryOverlayClose.addEventListener('click', function () {
+  closeGalleryOverlay();
 });
 
-overlayClose.addEventListener('keydown', function (evt) {
+galleryOverlayClose.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
-    closeOpenOverlay();
+    closeGalleryOverlay();
   }
 });
 
@@ -119,6 +119,10 @@ userPictures.forEach(function (picture) {
     openGalleryOverlay(evt.currentTarget);
   });
 });
+
+var UPLOAD_RESIZE_STEP = 25;
+var UPLOAD_RESIZE_MIN = 25;
+var UPLOAD_RESIZE_MAX = 100;
 
 var uploadForm = document.querySelector('#upload-select-image');
 var uploadFile = uploadForm.querySelector('#upload-file');

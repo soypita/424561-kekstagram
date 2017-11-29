@@ -81,21 +81,21 @@ var fillOverlay = function (picture) {
   galleryOverlay.querySelector('.comments-count').textContent = picture.querySelector('.picture-comments').textContent;
 };
 
-var onOverlayEscPress = function (evt) {
+var onOverlayKeyPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
     closeOpenOverlay();
+    document.removeEventListener('keydown', onOverlayKeyPress);
   }
 };
 
 var openGalleryOverlay = function (picture) {
   fillOverlay(picture);
   galleryOverlay.classList.remove('hidden');
-  document.addEventListener('keydown', onOverlayEscPress);
+  document.addEventListener('keydown', onOverlayKeyPress);
 };
 
 var closeOpenOverlay = function () {
   galleryOverlay.classList.add('hidden');
-  document.removeEventListener('keydown', onOverlayEscPress);
 };
 
 var userPictures = document.querySelectorAll('.picture');
@@ -115,13 +115,7 @@ overlayClose.addEventListener('keydown', function (evt) {
 userPictures.forEach(function (picture) {
   picture.addEventListener('click', function (evt) {
     evt.preventDefault();
-    openGalleryOverlay(picture);
-  });
-  picture.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
-      evt.preventDefault();
-      openGalleryOverlay(picture);
-    }
+    openGalleryOverlay(evt.currentTarget);
   });
 });
 

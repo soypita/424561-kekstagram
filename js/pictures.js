@@ -138,33 +138,62 @@ var uploadResizeInc = uploadForm.querySelector('.upload-resize-controls-button-i
 var uploadResizeDec = uploadForm.querySelector('.upload-resize-controls-button-dec');
 var uploadPostHashTags = uploadForm.querySelector('.upload-form-hashtags');
 
+var checkLengthOfHashTag = function (hashTags) {
+  var isValid = true;
+  for (var j = 0; j < hashTags.length; j++) {
+    if (hashTags[j].length > LENGTH_OF_HASH_TAG) {
+      isValid = false;
+      break;
+    }
+  }
+  return isValid;
+};
+
+var checkCountOfHashTags = function (hashTags) {
+  return hashTags.length < COUNT_OF_HASH_TAGS;
+};
+
+var checkFirstSymbol = function (hashTags) {
+  var isValid = true;
+  for (var j = 0; j < hashTags.length; j++) {
+    if (hashTags[j][0] !== '#') {
+      isValid = false;
+      break;
+    }
+  }
+  return isValid;
+};
+
+var checkIdentity = function (hashTags) {
+  var isValid = true;
+  for (var j = 0; j < hashTags.length; j++) {
+    if (hashTags.indexOf(hashTags[j], j + 1) !== -1) {
+      isValid = false;
+      break;
+    }
+  }
+  return isValid;
+};
+
+var checkDivide = function (hashTags) {
+  var isValid = true;
+  for (var j = 0; j < hashTags.length; j++) {
+    if (hashTags[j].indexOf(hashTags[j][0], 1) !== -1) {
+      isValid = false;
+      break;
+    }
+  }
+  return isValid;
+};
+
 var checkHashTags = function () {
   var isValid = true;
 
-  var rawHashTags = uploadPostHashTags.value.split(' ');
+  var rawHashTags = uploadPostHashTags.value.toLowerCase().split(' ');
 
-  if (rawHashTags.length === 0) {
+  if (!checkCountOfHashTags(rawHashTags) || !checkFirstSymbol(rawHashTags)
+    || !checkLengthOfHashTag(rawHashTags) || !checkIdentity(rawHashTags) || !checkDivide(rawHashTags)) {
     isValid = false;
-  } else {
-    var isLengthOfTagValid = true;
-    var isNumberOfTagsValid = true;
-    var isFirstSymbolCorrect = true;
-
-    if (rawHashTags.length > COUNT_OF_HASH_TAGS) {
-      isNumberOfTagsValid = false;
-    }
-
-    rawHashTags.forEach(function (tag) {
-      tag.toLowerCase();
-      if (tag[0] !== '#') {
-        isFirstSymbolCorrect = false;
-      }
-      if (tag.length > LENGTH_OF_HASH_TAG) {
-        isLengthOfTagValid = false;
-      }
-    });
-
-    isValid = isLengthOfTagValid && isNumberOfTagsValid && isFirstSymbolCorrect;
   }
 
   return isValid;

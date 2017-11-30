@@ -144,7 +144,7 @@ var submitUpload = uploadForm.querySelector('.upload-form-submit');
 var checkLengthOfHashTag = function (hashTags) {
   var isValid = true;
   for (var j = 0; j < hashTags.length; j++) {
-    if (hashTags[j].length > LENGTH_OF_HASH_TAG) {
+    if (hashTags[j].length > LENGTH_OF_HASH_TAG || hashTags[j].length === 1) {
       isValid = false;
       break;
     }
@@ -211,6 +211,11 @@ var onUploadOverlayKeyPress = function (evt) {
   }
 };
 
+var resetFormToDefault = function () {
+  uploadPostHashTags.setCustomValidity('');
+  uploadForm.reset();
+};
+
 var openUploadOverlay = function () {
   uploadOverlay.classList.remove('hidden');
   document.addEventListener('keydown', onUploadOverlayKeyPress);
@@ -218,6 +223,8 @@ var openUploadOverlay = function () {
 
 var closeUploadOverlay = function () {
   uploadOverlay.classList.add('hidden');
+  resetFormToDefault();
+  setUploadImageToDefault();
 };
 
 var setFilterForUploadImage = function (filterName) {
@@ -232,7 +239,6 @@ var setScaleForUploadImage = function (scaleCoeff) {
 var setUploadImageToDefault = function () {
   setScaleForUploadImage(1);
   setFilterForUploadImage(DEFAULT_IMAGE_FILTER);
-  uploadResizeValue.value = UPLOAD_RESIZE_MAX + '%';
 };
 
 uploadFile.addEventListener('change', function () {
@@ -278,7 +284,7 @@ submitUpload.addEventListener('click', function () {
     uploadPostHashTags.setCustomValidity('Неверный формат хэштега');
   } else {
     uploadForm.submit();
-    uploadForm.reset();
+    resetFormToDefault();
     setUploadImageToDefault();
   }
 });

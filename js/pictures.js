@@ -247,6 +247,7 @@ uploadFile.addEventListener('change', function () {
 });
 
 uploadCancel.addEventListener('click', function () {
+  uploadCancel.preventDefault();
   closeUploadOverlay();
 });
 
@@ -280,6 +281,7 @@ uploadPostHashTags.addEventListener('input', function () {
 });
 
 submitUpload.addEventListener('click', function () {
+  submitUpload.preventDefault();
   if (uploadPostHashTags.value && !checkHashTags()) {
     uploadPostHashTags.setCustomValidity('Неверный формат хэштега');
   } else {

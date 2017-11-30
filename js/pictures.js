@@ -281,10 +281,10 @@ uploadPostHashTags.addEventListener('input', function () {
 });
 
 submitUpload.addEventListener('click', function () {
-  submitUpload.preventDefault();
   if (uploadPostHashTags.value && !checkHashTags()) {
     uploadPostHashTags.setCustomValidity('Неверный формат хэштега');
   } else {
+    submitUpload.preventDefault();
     uploadForm.submit();
     resetFormToDefault();
     setUploadImageToDefault();

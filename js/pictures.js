@@ -232,6 +232,7 @@ var setScaleForUploadImage = function (scaleCoeff) {
 var setUploadImageToDefault = function () {
   setScaleForUploadImage(1);
   setFilterForUploadImage(DEFAULT_IMAGE_FILTER);
+  uploadResizeValue.value = UPLOAD_RESIZE_MAX + '%';
 };
 
 uploadFile.addEventListener('change', function () {
@@ -277,6 +278,7 @@ submitUpload.addEventListener('click', function () {
     uploadPostHashTags.setCustomValidity('Неверный формат хэштега');
   } else {
     uploadForm.submit();
+    uploadForm.reset();
     setUploadImageToDefault();
   }
 });

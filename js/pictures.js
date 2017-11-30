@@ -137,6 +137,7 @@ var uploadResizeValue = uploadForm.querySelector('.upload-resize-controls-value'
 var uploadResizeInc = uploadForm.querySelector('.upload-resize-controls-button-inc');
 var uploadResizeDec = uploadForm.querySelector('.upload-resize-controls-button-dec');
 var uploadPostHashTags = uploadForm.querySelector('.upload-form-hashtags');
+var submitUpload = uploadForm.querySelector('.upload-form-submit');
 
 var checkLengthOfHashTag = function (hashTags) {
   var isValid = true;
@@ -252,5 +253,17 @@ uploadResizeDec.addEventListener('click', function () {
     var newScaleValue = (currentScaleValue - UPLOAD_RESIZE_STEP);
     uploadResizeValue.value = newScaleValue + '%';
     setScaleForUploadImage(newScaleValue / 100);
+  }
+});
+
+uploadPostHashTags.addEventListener('input', function () {
+  uploadPostHashTags.setCustomValidity('');
+});
+
+submitUpload.addEventListener('click', function () {
+  if (uploadPostHashTags.value && !checkHashTags()) {
+    uploadPostHashTags.setCustomValidity('Неверный формат хэштега');
+  } else {
+    uploadForm.submit();
   }
 });

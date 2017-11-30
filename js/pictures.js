@@ -7,6 +7,8 @@ var MAX_COUNT_OF_LIKES = 200;
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 
+var DEFAULT_IMAGE_FILTER = 'image-preview';
+
 var UPLOAD_RESIZE_STEP = 25;
 var UPLOAD_RESIZE_MIN = 25;
 var UPLOAD_RESIZE_MAX = 100;
@@ -218,12 +220,23 @@ var closeUploadOverlay = function () {
   uploadOverlay.classList.add('hidden');
 };
 
+var setFilterForUploadImage = function (filterName) {
+  uploadImagePreview.className = 'effect-image-preview';
+  uploadImagePreview.classList.add(filterName);
+};
+
 var setScaleForUploadImage = function (scaleCoeff) {
   uploadImagePreview.style.transform = 'scale(' + scaleCoeff + ')';
 };
 
+var setUploadImageToDefault = function () {
+  setScaleForUploadImage(1);
+  setFilterForUploadImage(DEFAULT_IMAGE_FILTER);
+};
+
 uploadFile.addEventListener('change', function () {
   openUploadOverlay();
+  setUploadImageToDefault();
 });
 
 uploadCancel.addEventListener('click', function () {
@@ -233,8 +246,7 @@ uploadCancel.addEventListener('click', function () {
 uploadEffect.addEventListener('click', function (evt) {
   if (evt.target.type === 'radio') {
     var filterName = evt.target.id.replace('upload-', '');
-    uploadImagePreview.className = 'effect-image-preview';
-    uploadImagePreview.classList.add(filterName);
+    setFilterForUploadImage(filterName);
   }
 });
 
@@ -265,5 +277,6 @@ submitUpload.addEventListener('click', function () {
     uploadPostHashTags.setCustomValidity('Неверный формат хэштега');
   } else {
     uploadForm.submit();
+    setUploadImageToDefault();
   }
 });

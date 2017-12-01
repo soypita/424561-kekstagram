@@ -7,14 +7,11 @@ var MAX_COUNT_OF_LIKES = 200;
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 
-var DEFAULT_IMAGE_FILTER = 'image-preview';
-
 var UPLOAD_RESIZE_STEP = 25;
 var UPLOAD_RESIZE_MIN = 25;
 var UPLOAD_RESIZE_MAX = 100;
 
 var COUNT_OF_HASH_TAGS = 5;
-var LENGTH_OF_HASH_TAG = 20;
 
 var USER_COMMENTS = [
   'Всё отлично!',
@@ -141,79 +138,55 @@ var uploadResizeDec = uploadForm.querySelector('.upload-resize-controls-button-d
 var uploadPostHashTags = uploadForm.querySelector('.upload-form-hashtags');
 var submitUpload = uploadForm.querySelector('.upload-form-submit');
 
-var checkLengthOfHashTag = function (hashTags) {
-  var isValid = true;
-  for (var j = 0; j < hashTags.length; j++) {
-    if (hashTags[j].length > LENGTH_OF_HASH_TAG || hashTags[j].length === 1) {
-      isValid = false;
-      break;
-    }
-  }
-  return isValid;
-};
-
 var checkCountOfHashTags = function (hashTags) {
-  return hashTags.length < COUNT_OF_HASH_TAGS;
+  return hashTags.length <= COUNT_OF_HASH_TAGS;
 };
 
-var checkFirstSymbol = function (hashTags) {
+var checkEvery = function (array, cb) {
   var isValid = true;
-  for (var j = 0; j < hashTags.length; j++) {
-    if (hashTags[j][0] !== '#') {
+  for (var j = 0; j < array.length; j++) {
+    if (!cb(array[j])) {
       isValid = false;
-      break;
-    }
-  }
-  return isValid;
-};
-
-var checkIdentity = function (hashTags) {
-  var isValid = true;
-  for (var j = 0; j < hashTags.length; j++) {
-    if (hashTags.indexOf(hashTags[j], j + 1) !== -1) {
-      isValid = false;
-      break;
-    }
-  }
-  return isValid;
-};
-
-var checkDivide = function (hashTags) {
-  var isValid = true;
-  for (var j = 0; j < hashTags.length; j++) {
-    if (hashTags[j].indexOf(hashTags[j][0], 1) !== -1) {
-      isValid = false;
-      break;
     }
   }
   return isValid;
 };
 
 var checkHashTags = function () {
-  var isValid = true;
 
-  var rawHashTags = uploadPostHashTags.value.toLowerCase().split(' ');
+  var hashRegex = '(#[a-zA-Zа-яА-Я\\d]{1,18}$)';
 
-  if (!checkCountOfHashTags(rawHashTags) || !checkFirstSymbol(rawHashTags)
-    || !checkLengthOfHashTag(rawHashTags) || !checkIdentity(rawHashTags) || !checkDivide(rawHashTags)) {
-    isValid = false;
-  }
+  var pattern = new RegExp(hashRegex);
 
-  return isValid;
+  var rawHashTags = uploadPostHashTags.value.toLowerCase().split(' ').sort();
+
+  var isCountOfTagsValid = checkCountOfHashTags(rawHashTags);
+
+  var isTagValid = checkEvery(rawHashTags, function (tag) {
+    return (pattern.test(tag));
+  });
+
+  var prevTag = rawHashTags[0];
+  var isTagUnique = checkEvery(rawHashTags.slice(1), function (tag) {
+    if (tag === prevTag) {
+      return false;
+    } else {
+      prevTag = tag;
+      return true;
+    }
+  });
+
+  return isTagValid && isCountOfTagsValid && isTagUnique;
 };
 
 var onUploadOverlayKeyPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
     if (document.activeElement !== uploadComment) {
       closeUploadOverlay();
+      uploadForm.reset();
       document.removeEventListener('keydown', onUploadOverlayKeyPress);
     }
   }
-};
-
-var resetFormToDefault = function () {
-  uploadPostHashTags.setCustomValidity('');
-  uploadForm.reset();
 };
 
 var openUploadOverlay = function () {
@@ -223,13 +196,16 @@ var openUploadOverlay = function () {
 
 var closeUploadOverlay = function () {
   uploadOverlay.classList.add('hidden');
-  resetFormToDefault();
   setUploadImageToDefault();
 };
 
+var currentFilter;
 var setFilterForUploadImage = function (filterName) {
-  uploadImagePreview.className = 'effect-image-preview';
+  if (currentFilter) {
+    uploadImagePreview.classList.remove(currentFilter);
+  }
   uploadImagePreview.classList.add(filterName);
+  currentFilter = filterName;
 };
 
 var setScaleForUploadImage = function (scaleCoeff) {
@@ -238,55 +214,61 @@ var setScaleForUploadImage = function (scaleCoeff) {
 
 var setUploadImageToDefault = function () {
   setScaleForUploadImage(1);
-  setFilterForUploadImage(DEFAULT_IMAGE_FILTER);
+  uploadImagePreview.classList.remove(currentFilter);
+  setElementValid(uploadPostHashTags);
+};
+
+var setElementInvalid = function (elem) {
+  elem.style.borderColor = 'red';
+};
+
+var setElementValid = function (elem) {
+  elem.style.borderColor = '';
 };
 
 uploadFile.addEventListener('change', function () {
   openUploadOverlay();
-  setUploadImageToDefault();
 });
 
 uploadCancel.addEventListener('click', function () {
-  uploadCancel.preventDefault();
   closeUploadOverlay();
 });
 
 uploadEffect.addEventListener('click', function (evt) {
   if (evt.target.type === 'radio') {
-    var filterName = evt.target.id.replace('upload-', '');
+    var filterName = 'effect-' + evt.target.value;
     setFilterForUploadImage(filterName);
   }
 });
 
-uploadResizeInc.addEventListener('click', function () {
+var changeScaleCoeff = function (value) {
   var currentScaleValue = parseInt(uploadResizeValue.value.replace('%', ''), 10);
-  if (currentScaleValue < UPLOAD_RESIZE_MAX) {
-    var newScaleValue = (currentScaleValue + UPLOAD_RESIZE_STEP);
+  if ((value > 0 && currentScaleValue < UPLOAD_RESIZE_MAX) || (value < 0 && currentScaleValue > UPLOAD_RESIZE_MIN)) {
+    var newScaleValue = (currentScaleValue + value);
     uploadResizeValue.value = newScaleValue + '%';
     setScaleForUploadImage(newScaleValue / 100);
   }
+};
+
+uploadResizeInc.addEventListener('click', function () {
+  changeScaleCoeff(UPLOAD_RESIZE_STEP);
 });
 
 uploadResizeDec.addEventListener('click', function () {
-  var currentScaleValue = parseInt(uploadResizeValue.value.replace('%', ''), 10);
-  if (currentScaleValue > UPLOAD_RESIZE_MIN) {
-    var newScaleValue = (currentScaleValue - UPLOAD_RESIZE_STEP);
-    uploadResizeValue.value = newScaleValue + '%';
-    setScaleForUploadImage(newScaleValue / 100);
-  }
+  changeScaleCoeff(-UPLOAD_RESIZE_STEP);
 });
 
 uploadPostHashTags.addEventListener('input', function () {
-  uploadPostHashTags.setCustomValidity('');
+  setElementValid(uploadPostHashTags);
 });
 
-submitUpload.addEventListener('click', function () {
+submitUpload.addEventListener('click', function (evt) {
+  evt.preventDefault();
   if (uploadPostHashTags.value && !checkHashTags()) {
-    uploadPostHashTags.setCustomValidity('Неверный формат хэштега');
+    setElementInvalid(uploadPostHashTags);
   } else {
-    submitUpload.preventDefault();
     uploadForm.submit();
-    resetFormToDefault();
+    uploadForm.reset();
     setUploadImageToDefault();
   }
 });

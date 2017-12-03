@@ -7,6 +7,9 @@
 
   var COUNT_OF_HASH_TAGS = 5;
 
+  var MAX_BLUR = 3;
+  var MAX_HEAT = 3;
+
   var uploadOverlay = document.querySelector('.upload-overlay');
   var uploadForm = document.querySelector('#upload-select-image');
   var uploadFile = uploadForm.querySelector('#upload-file');
@@ -19,6 +22,13 @@
   var uploadResizeDec = uploadForm.querySelector('.upload-resize-controls-button-dec');
   var uploadPostHashTags = uploadForm.querySelector('.upload-form-hashtags');
   var submitUpload = uploadForm.querySelector('.upload-form-submit');
+  var filterLevelArea = uploadForm.querySelector('.upload-effect-level');
+  var filterLevelPin = uploadForm.querySelector('.upload-effect-level-pin');
+  var filterLevelBar = uploadForm.querySelector('.upload-effect-level-line');
+  var filterLevelValue = uploadForm.querySelector('.upload-effect-level-val');
+  var filterUploadLevelValue = uploadForm.querySelector('.upload-effect-level-value');
+
+  filterLevelArea.classList.add('hidden');
 
   var checkCountOfHashTags = function (hashTags) {
     return hashTags.length <= COUNT_OF_HASH_TAGS;
@@ -75,13 +85,47 @@
     setUploadImageToDefault();
   };
 
+  var setFilterLevel = function (level) {
+    var effect;
+    switch (currentFilter) {
+      case 'effect-chrome' :
+        effect = 'grayscale(' + level / 100 + ')';
+        break;
+      case 'effect-sepia' :
+        effect = 'sepia(' + level / 100 + ')';
+        break;
+      case 'effect-marvin' :
+        effect = 'invert(' + level + '%)';
+        break;
+      case 'effect-phobos' :
+        effect = 'blur(' + level / 100 * MAX_BLUR + 'px)';
+        break;
+      case 'effect-heat' :
+        effect = 'brightness(' + level / 100 * MAX_HEAT + ')';
+        break;
+    }
+    filterUploadLevelValue.value = level.toFixed();
+    uploadImagePreview.style.filter = effect;
+  };
+
   var currentFilter;
+  var defaultFilterLevel;
+
   var setFilterForUploadImage = function (filterName) {
     if (currentFilter) {
-      uploadImagePreview.classList.remove(currentFilter);
+      uploadImagePreview.style.filter = '';
     }
-    uploadImagePreview.classList.add(filterName);
+    if (filterName === '' || filterName === 'effect-none') {
+      filterLevelArea.classList.add('hidden');
+    } else {
+      filterLevelArea.classList.remove('hidden');
+    }
     currentFilter = filterName;
+    if (!defaultFilterLevel) {
+      defaultFilterLevel = filterLevelPin.offsetLeft * 100 / filterLevelBar.offsetWidth;
+    }
+    setFilterLevel(defaultFilterLevel);
+    setFilterPinPosition(defaultFilterLevel);
   };
 
   var setScaleForUploadImage = function (scaleCoeff) {
@@ -90,7 +134,7 @@
 
   var setUploadImageToDefault = function () {
     setScaleForUploadImage(1);
-    uploadImagePreview.classList.remove(currentFilter);
+    setFilterForUploadImage('effect-none');
     setElementValid(uploadPostHashTags);
   };
 
@@ -147,5 +191,43 @@
       uploadForm.reset();
       setUploadImageToDefault();
     }
+  });
+
+  var getPinOffsetOfInPercent = function (value) {
+    return value * 100 / filterLevelBar.offsetWidth;
+  };
+
+  var setFilterPinPosition = function (position) {
+    filterLevelPin.style.left = position + '%';
+    filterLevelValue.style.width = position + '%';
+  };
+
+  filterLevelPin.addEventListener('mousedown', function (evt) {
+    var startPosition = evt.clientX;
+
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shift = startPosition - moveEvt.clientX;
+      var newPosition = filterLevelPin.offsetLeft - shift;
+
+      if (newPosition >= 0 && newPosition <= filterLevelBar.offsetWidth) {
+        startPosition = moveEvt.clientX;
+        var newOffset = getPinOffsetOfInPercent(newPosition);
+        setFilterPinPosition(newOffset);
+        setFilterLevel(newOffset);
+      }
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   });
 })();

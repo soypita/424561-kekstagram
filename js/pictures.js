@@ -145,7 +145,7 @@ var checkCountOfHashTags = function (hashTags) {
 var checkEvery = function (array, cb) {
   var isValid = true;
   for (var j = 0; j < array.length; j++) {
-    if (!cb(array[j])) {
+    if (!cb(j)) {
       isValid = false;
     }
   }
@@ -154,7 +154,7 @@ var checkEvery = function (array, cb) {
 
 var checkHashTags = function () {
 
-  var hashRegex = '(#[a-zA-Zа-яА-Я\\d]{1,18}$)';
+  var hashRegex = '(^#[a-zA-Zа-яА-Я\\d]{1,18}$)';
 
   var pattern = new RegExp(hashRegex);
 
@@ -162,18 +162,12 @@ var checkHashTags = function () {
 
   var isCountOfTagsValid = checkCountOfHashTags(rawHashTags);
 
-  var isTagValid = checkEvery(rawHashTags, function (tag) {
-    return (pattern.test(tag));
+  var isTagValid = checkEvery(rawHashTags, function (index) {
+    return (pattern.test(rawHashTags[index]));
   });
 
-  var prevTag = rawHashTags[0];
-  var isTagUnique = checkEvery(rawHashTags.slice(1), function (tag) {
-    if (tag === prevTag) {
-      return false;
-    } else {
-      prevTag = tag;
-      return true;
-    }
+  var isTagUnique = checkEvery(rawHashTags, function (index) {
+    return rawHashTags[index + 1] !== rawHashTags[index];
   });
 
   return isTagValid && isCountOfTagsValid && isTagUnique;

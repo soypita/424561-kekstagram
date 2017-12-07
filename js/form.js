@@ -1,9 +1,6 @@
 'use strict';
 
 (function () {
-  var UPLOAD_RESIZE_STEP = 25;
-  var UPLOAD_RESIZE_MIN = 25;
-  var UPLOAD_RESIZE_MAX = 100;
 
   var COUNT_OF_HASH_TAGS = 5;
 
@@ -17,9 +14,8 @@
   var uploadComment = uploadForm.querySelector('.upload-form-description');
   var uploadEffect = uploadForm.querySelector('.upload-effect');
   var uploadImagePreview = uploadForm.querySelector('.effect-image-preview');
+  var uploadScaleElement = document.querySelector('.upload-resize-controls');
   var uploadResizeValue = uploadForm.querySelector('.upload-resize-controls-value');
-  var uploadResizeInc = uploadForm.querySelector('.upload-resize-controls-button-inc');
-  var uploadResizeDec = uploadForm.querySelector('.upload-resize-controls-button-dec');
   var uploadPostHashTags = uploadForm.querySelector('.upload-form-hashtags');
   var submitUpload = uploadForm.querySelector('.upload-form-submit');
   var filterLevelArea = uploadForm.querySelector('.upload-effect-level');
@@ -129,7 +125,8 @@
   };
 
   var setScaleForUploadImage = function (scaleCoeff) {
-    uploadImagePreview.style.transform = 'scale(' + scaleCoeff + ')';
+    uploadResizeValue.value = scaleCoeff + '%';
+    uploadImagePreview.style.transform = 'scale(' + scaleCoeff / 100 + ')';
   };
 
   var setUploadImageToDefault = function () {
@@ -161,22 +158,7 @@
     }
   });
 
-  var changeScaleCoeff = function (value) {
-    var currentScaleValue = parseInt(uploadResizeValue.value.replace('%', ''), 10);
-    if ((value > 0 && currentScaleValue < UPLOAD_RESIZE_MAX) || (value < 0 && currentScaleValue > UPLOAD_RESIZE_MIN)) {
-      var newScaleValue = (currentScaleValue + value);
-      uploadResizeValue.value = newScaleValue + '%';
-      setScaleForUploadImage(newScaleValue / 100);
-    }
-  };
-
-  uploadResizeInc.addEventListener('click', function () {
-    changeScaleCoeff(UPLOAD_RESIZE_STEP);
-  });
-
-  uploadResizeDec.addEventListener('click', function () {
-    changeScaleCoeff(-UPLOAD_RESIZE_STEP);
-  });
+  window.initializeScale(uploadScaleElement, setScaleForUploadImage);
 
   uploadPostHashTags.addEventListener('input', function () {
     setElementValid(uploadPostHashTags);

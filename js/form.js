@@ -12,7 +12,7 @@
   var uploadFile = uploadForm.querySelector('#upload-file');
   var uploadCancel = uploadForm.querySelector('.upload-form-cancel');
   var uploadComment = uploadForm.querySelector('.upload-form-description');
-  var uploadEffect = uploadForm.querySelector('.upload-effect');
+  var uploadFilterElement = uploadForm.querySelector('.upload-effect');
   var uploadImagePreview = uploadForm.querySelector('.effect-image-preview');
   var uploadScaleElement = document.querySelector('.upload-resize-controls');
   var uploadResizeValue = uploadForm.querySelector('.upload-resize-controls-value');
@@ -84,19 +84,19 @@
   var setFilterLevel = function (level) {
     var effect;
     switch (currentFilter) {
-      case 'effect-chrome' :
+      case 'chrome' :
         effect = 'grayscale(' + level / 100 + ')';
         break;
-      case 'effect-sepia' :
+      case 'sepia' :
         effect = 'sepia(' + level / 100 + ')';
         break;
-      case 'effect-marvin' :
+      case 'marvin' :
         effect = 'invert(' + level + '%)';
         break;
-      case 'effect-phobos' :
+      case 'phobos' :
         effect = 'blur(' + level / 100 * MAX_BLUR + 'px)';
         break;
-      case 'effect-heat' :
+      case 'heat' :
         effect = 'brightness(' + level / 100 * MAX_HEAT + ')';
         break;
     }
@@ -106,12 +106,11 @@
 
   var currentFilter;
   var defaultFilterLevel;
-
   var setFilterForUploadImage = function (filterName) {
     if (currentFilter) {
       uploadImagePreview.style.filter = '';
     }
-    if (filterName === '' || filterName === 'effect-none') {
+    if (filterName === '' || filterName === 'none') {
       filterLevelArea.classList.add('hidden');
     } else {
       filterLevelArea.classList.remove('hidden');
@@ -130,8 +129,8 @@
   };
 
   var setUploadImageToDefault = function () {
-    setScaleForUploadImage(1);
-    setFilterForUploadImage('effect-none');
+    setScaleForUploadImage(100);
+    setFilterForUploadImage('none');
     setElementValid(uploadPostHashTags);
   };
 
@@ -151,12 +150,7 @@
     closeUploadOverlay();
   });
 
-  uploadEffect.addEventListener('click', function (evt) {
-    if (evt.target.type === 'radio') {
-      var filterName = 'effect-' + evt.target.value;
-      setFilterForUploadImage(filterName);
-    }
-  });
+  window.initializeFilters(uploadFilterElement, setFilterForUploadImage);
 
   window.initializeScale(uploadScaleElement, setScaleForUploadImage);
 

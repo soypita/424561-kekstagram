@@ -1,9 +1,6 @@
 'use strict';
 
 (function () {
-  var UPLOAD_RESIZE_STEP = 25;
-  var UPLOAD_RESIZE_MIN = 25;
-  var UPLOAD_RESIZE_MAX = 100;
 
   var COUNT_OF_HASH_TAGS = 5;
 
@@ -15,11 +12,10 @@
   var uploadFile = uploadForm.querySelector('#upload-file');
   var uploadCancel = uploadForm.querySelector('.upload-form-cancel');
   var uploadComment = uploadForm.querySelector('.upload-form-description');
-  var uploadEffect = uploadForm.querySelector('.upload-effect');
+  var uploadFilterElement = uploadForm.querySelector('.upload-effect');
   var uploadImagePreview = uploadForm.querySelector('.effect-image-preview');
+  var uploadScaleElement = document.querySelector('.upload-resize-controls');
   var uploadResizeValue = uploadForm.querySelector('.upload-resize-controls-value');
-  var uploadResizeInc = uploadForm.querySelector('.upload-resize-controls-button-inc');
-  var uploadResizeDec = uploadForm.querySelector('.upload-resize-controls-button-dec');
   var uploadPostHashTags = uploadForm.querySelector('.upload-form-hashtags');
   var submitUpload = uploadForm.querySelector('.upload-form-submit');
   var filterLevelArea = uploadForm.querySelector('.upload-effect-level');
@@ -88,19 +84,19 @@
   var setFilterLevel = function (level) {
     var effect;
     switch (currentFilter) {
-      case 'effect-chrome' :
+      case 'chrome' :
         effect = 'grayscale(' + level / 100 + ')';
         break;
-      case 'effect-sepia' :
+      case 'sepia' :
         effect = 'sepia(' + level / 100 + ')';
         break;
-      case 'effect-marvin' :
+      case 'marvin' :
         effect = 'invert(' + level + '%)';
         break;
-      case 'effect-phobos' :
+      case 'phobos' :
         effect = 'blur(' + level / 100 * MAX_BLUR + 'px)';
         break;
-      case 'effect-heat' :
+      case 'heat' :
         effect = 'brightness(' + level / 100 * MAX_HEAT + ')';
         break;
     }
@@ -110,12 +106,11 @@
 
   var currentFilter;
   var defaultFilterLevel;
-
   var setFilterForUploadImage = function (filterName) {
     if (currentFilter) {
       uploadImagePreview.style.filter = '';
     }
-    if (filterName === '' || filterName === 'effect-none') {
+    if (filterName === '' || filterName === 'none') {
       filterLevelArea.classList.add('hidden');
     } else {
       filterLevelArea.classList.remove('hidden');
@@ -129,12 +124,13 @@
   };
 
   var setScaleForUploadImage = function (scaleCoeff) {
-    uploadImagePreview.style.transform = 'scale(' + scaleCoeff + ')';
+    uploadResizeValue.value = scaleCoeff + '%';
+    uploadImagePreview.style.transform = 'scale(' + scaleCoeff / 100 + ')';
   };
 
   var setUploadImageToDefault = function () {
-    setScaleForUploadImage(1);
-    setFilterForUploadImage('effect-none');
+    setScaleForUploadImage(100);
+    setFilterForUploadImage('none');
     setElementValid(uploadPostHashTags);
   };
 
@@ -154,29 +150,9 @@
     closeUploadOverlay();
   });
 
-  uploadEffect.addEventListener('click', function (evt) {
-    if (evt.target.type === 'radio') {
-      var filterName = 'effect-' + evt.target.value;
-      setFilterForUploadImage(filterName);
-    }
-  });
+  window.initializeFilters(uploadFilterElement, setFilterForUploadImage);
 
-  var changeScaleCoeff = function (value) {
-    var currentScaleValue = parseInt(uploadResizeValue.value.replace('%', ''), 10);
-    if ((value > 0 && currentScaleValue < UPLOAD_RESIZE_MAX) || (value < 0 && currentScaleValue > UPLOAD_RESIZE_MIN)) {
-      var newScaleValue = (currentScaleValue + value);
-      uploadResizeValue.value = newScaleValue + '%';
-      setScaleForUploadImage(newScaleValue / 100);
-    }
-  };
-
-  uploadResizeInc.addEventListener('click', function () {
-    changeScaleCoeff(UPLOAD_RESIZE_STEP);
-  });
-
-  uploadResizeDec.addEventListener('click', function () {
-    changeScaleCoeff(-UPLOAD_RESIZE_STEP);
-  });
+  window.initializeScale(uploadScaleElement, setScaleForUploadImage);
 
   uploadPostHashTags.addEventListener('input', function () {
     setElementValid(uploadPostHashTags);

@@ -24,10 +24,8 @@
     return outCommentsArr;
   };
 
-
   window.generatePictures = function () {
     var pictures = [];
-
     for (var i = 0; i <= NUMBER_OF_PICTURES; i++) {
       var urlPath = 'photos/' + (i + 1) + '.jpg';
       var likesCounter = window.getRandomInRange(MIN_COUNT_OF_LIKES, MAX_COUNT_OF_LIKES);
@@ -41,6 +39,4 @@
     }
     return pictures;
   };
-
-
 })();

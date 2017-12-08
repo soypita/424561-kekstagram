@@ -166,9 +166,10 @@
     if (uploadPostHashTags.value && !checkHashTags()) {
       setElementInvalid(uploadPostHashTags);
     } else {
-      uploadForm.submit();
-      uploadForm.reset();
-      setUploadImageToDefault();
+      window.backend.save(new FormData(uploadForm), function () {
+        uploadForm.reset();
+        closeUploadOverlay();
+      }, window.errorHandler);
     }
   });
 

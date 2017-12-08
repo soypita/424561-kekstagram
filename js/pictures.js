@@ -45,6 +45,6 @@
   window.fillPictureGallery = function (pictureGallery, cb) {
     gallery = pictureGallery;
     galleryHandler = cb;
-    window.backend.load(fillPictureContainer, errorHandler);
+    window.backend.load(fillPictureContainer, window.errorHandler);
   };
 })();

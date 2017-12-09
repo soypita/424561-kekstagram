@@ -15,10 +15,10 @@
     }
   };
 
-  window.initializeScale = function (scaleElement, cb) {
-    var resizeInc = scaleElement.querySelector('.upload-resize-controls-button-inc');
-    var resizeDec = scaleElement.querySelector('.upload-resize-controls-button-dec');
-    var resizeState = scaleElement.querySelector('.upload-resize-controls-value');
+  window.initializeScale = function (scaleControl, cb) {
+    var resizeInc = scaleControl.querySelector('.upload-resize-controls-button-inc');
+    var resizeDec = scaleControl.querySelector('.upload-resize-controls-button-dec');
+    var resizeState = scaleControl.querySelector('.upload-resize-controls-value');
 
     resizeInc.addEventListener('click', function () {
       changeScaleCoeff(resizeState, RESIZE_STEP, cb);

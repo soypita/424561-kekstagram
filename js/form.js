@@ -116,7 +116,7 @@
     if (currentFilter) {
       uploadImagePreview.style.filter = '';
     }
-    if (filterName === 'none') {
+    if (filterName === INITIAL_IMAGE_FILTER) {
       filterLevelArea.classList.add('hidden');
     } else {
       filterLevelArea.classList.remove('hidden');

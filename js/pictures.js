@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+
   var pictureTemplate = document.getElementById('picture-template').content.querySelector('.picture');
 
   var setupPictureElement = function (el, imgSelector, likeSelector, commentSelector, pic) {
@@ -29,17 +30,14 @@
     galleryHandler();
   };
 
+  var errorViewer = window.createErrorContainer();
+
   window.errorHandler = function (errorMessage) {
-    var errorViewer = document.createElement('div');
-    errorViewer.style = 'z-index: 100; margin: 0 auto; width: auto; height: 50px; text-align: center;' +
-      ' background-color: rgba(255, 231, 82, 0.3); color: #ffe753';
-    errorViewer.style.position = 'absolute';
-    errorViewer.style.top = 0;
-    errorViewer.style.left = 0;
-    errorViewer.style.right = 0;
-    errorViewer.style.fontSize = '30px';
     errorViewer.textContent = errorMessage;
     document.body.insertAdjacentElement('afterbegin', errorViewer);
+    setTimeout(function () {
+      document.body.removeChild(errorViewer);
+    }, 5000);
   };
 
   window.fillPictureGallery = function (pictureGallery, cb) {

@@ -66,16 +66,16 @@
   var setSortingFilter = function (filterName) {
     switch (filterName) {
       case 'recommend':
-        showRecommend();
+        window.debounce(showRecommend);
         break;
       case 'popular':
-        showPopular();
+        window.debounce(showPopular);
         break;
       case 'discussed':
-        showDiscussed();
+        window.debounce(showDiscussed);
         break;
       case 'random':
-        showRandom();
+        window.debounce(showRandom);
         break;
     }
   };

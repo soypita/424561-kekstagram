@@ -27,4 +27,10 @@
     errorContainer.style.fontSize = '30px';
     return errorContainer;
   };
+
+  var prevTimout;
+  window.debounce = function (funcToDebounce) {
+    window.clearTimeout(prevTimout);
+    window.setTimeout(funcToDebounce, 500);
+  };
 })();

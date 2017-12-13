@@ -2,7 +2,6 @@
 
 (function () {
   var pictureGallery = document.querySelector('.pictures');
-
   var fillPictureHandler = function () {
     var userPictures = document.querySelectorAll('.picture');
     userPictures.forEach(function (picture) {

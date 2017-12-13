@@ -22,13 +22,70 @@
 
   var galleryHandler;
 
-  var fillPictureContainer = function (pictures) {
+  var sortingFilters = document.querySelector('.filters');
+
+  var originalPictures = [];
+
+  var createPictures = function (pictures) {
     for (var j = 0; j < pictures.length; j++) {
       fragment.appendChild(renderPicture(pictures[j]));
     }
+    gallery.innerHTML = '';
     gallery.appendChild(fragment);
     galleryHandler();
   };
+
+  var fillPictureContainer = function (pictures) {
+    originalPictures = pictures;
+    createPictures(pictures);
+    sortingFilters.classList.remove('filters-inactive');
+  };
+
+  var showRecommend = function () {
+    createPictures(originalPictures);
+  };
+
+  var showPopular = function () {
+    createPictures(originalPictures.slice(0).sort(function (it1, it2) {
+      return it2.likes - it1.likes;
+    }));
+  };
+
+  var showDiscussed = function () {
+    createPictures(originalPictures.slice(0).sort(function (it1, it2) {
+      return it2.comments.length - it1.comments.length;
+    }));
+  };
+
+  var showRandom = function () {
+    createPictures(originalPictures.slice(0).sort(function () {
+      return window.getRandomInRange(-1, 1);
+    }));
+  };
+
+  var setSortingFilter = function (filterName) {
+    switch (filterName) {
+      case 'recommend':
+        showRecommend();
+        break;
+      case 'popular':
+        showPopular();
+        break;
+      case 'discussed':
+        showDiscussed();
+        break;
+      case 'random':
+        showRandom();
+        break;
+    }
+  };
+
+
+  sortingFilters.addEventListener('click', function (evt) {
+    if (evt.target.type === 'radio') {
+      setSortingFilter(evt.target.value);
+    }
+  });
 
   var errorViewer = window.createErrorContainer();
 

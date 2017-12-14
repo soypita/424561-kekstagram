@@ -17,10 +17,20 @@
     }
   };
 
-  window.openGalleryOverlay = function (picture) {
+  var openGalleryOverlay = function (picture) {
     fillOverlay(picture);
     galleryOverlay.classList.remove('hidden');
     document.addEventListener('keydown', onGalleryOverlayKeyPress);
+  };
+
+  window.initPicturePreview = function () {
+    var userPictures = document.querySelectorAll('.picture');
+    userPictures.forEach(function (picture) {
+      picture.addEventListener('click', function (evt) {
+        evt.preventDefault();
+        openGalleryOverlay(evt.currentTarget);
+      });
+    });
   };
 
   var closeGalleryOverlay = function () {

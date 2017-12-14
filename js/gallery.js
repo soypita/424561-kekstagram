@@ -2,16 +2,21 @@
 
 (function () {
   var pictureGallery = document.querySelector('.pictures');
-  var fillPictureHandler = function () {
-    var userPictures = document.querySelectorAll('.picture');
-    userPictures.forEach(function (picture) {
-      picture.addEventListener('click', function (evt) {
-        evt.preventDefault();
-        window.openGalleryOverlay(evt.currentTarget);
-      });
-    });
+
+  var fillGallery = function (container) {
+    pictureGallery.innerHTML = '';
+    pictureGallery.appendChild(container);
+    window.initPicturePreview();
   };
 
-  window.fillPictureGallery(pictureGallery, fillPictureHandler);
+  var sortPicturesHandler = function (sortingPictures) {
+    fillGallery(window.createPictures(sortingPictures));
+  };
 
+  var initGallery = function (serverPictures) {
+    fillGallery(window.createPictures(serverPictures));
+    window.initSortingFilters(sortPicturesHandler, serverPictures);
+  };
+
+  window.backend.load(initGallery, window.errorHandler);
 })();

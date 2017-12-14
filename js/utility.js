@@ -18,7 +18,7 @@
     return keyCode === ENTER_KEYCODE;
   };
 
-  window.createErrorContainer = function () {
+  var createErrorContainer = function () {
     var errorContainer = document.createElement('div');
     errorContainer.style = 'z-index: 100; margin: 0 auto; width: auto; height: 50px; text-align: center;' +
       ' background-color: rgba(255, 231, 82, 0.3); color: #ffe753';
@@ -30,11 +30,22 @@
     return errorContainer;
   };
 
-  var prevTimout;
-  window.debounce = function (funcToDebounce) {
-    if (prevTimout) {
-      window.clearTimeout(prevTimout);
-    }
-    prevTimout = window.setTimeout(funcToDebounce, DEBOUNCE_INTERVAL);
+  window.errorHandler = function (errorMessage) {
+    var errorViewer = createErrorContainer();
+    errorViewer.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', errorViewer);
+    setTimeout(function () {
+      document.body.removeChild(errorViewer);
+    }, 5000);
+  };
+
+  window.debounce = function () {
+    var prevTimout;
+    return function (funcToDebounce) {
+      if (prevTimout) {
+        window.clearTimeout(prevTimout);
+      }
+      prevTimout = window.setTimeout(funcToDebounce, DEBOUNCE_INTERVAL);
+    };
   };
 })();

@@ -67,7 +67,7 @@
   };
 
   var onUploadOverlayKeyPress = function (evt) {
-    if (window.isEscPress(evt.keyCode)) {
+    if (window.utility.isEscPress(evt.keyCode)) {
       if (document.activeElement !== uploadComment) {
         closeUploadOverlay();
         uploadForm.reset();
@@ -168,7 +168,7 @@
       window.backend.save(new FormData(uploadForm), function () {
         uploadForm.reset();
         closeUploadOverlay();
-      }, window.errorHandler);
+      }, window.utility.errorHandler);
     }
   });
 

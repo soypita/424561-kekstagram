@@ -2,20 +2,43 @@
 
 (function () {
   var ESC_KEYCODE = 27;
-  var ENTER_KEYCODE = 13;
 
   var DEBOUNCE_INTERVAL = 500;
 
-  window.getRandomInRange = function (min, max) {
-    return Math.round(min - 0.5 + Math.random() * (max - min + 1));
-  };
-
-  window.isEscPress = function (keyCode) {
-    return keyCode === ESC_KEYCODE;
-  };
-
-  window.isEnterPress = function (keyCode) {
-    return keyCode === ENTER_KEYCODE;
+  window.utility = {
+    isEscPress: function (keyCode) {
+      return keyCode === ESC_KEYCODE;
+    },
+    errorHandler: function (errorMessage) {
+      var errorViewer = createErrorContainer();
+      errorViewer.textContent = errorMessage;
+      document.body.insertAdjacentElement('afterbegin', errorViewer);
+      setTimeout(function () {
+        document.body.removeChild(errorViewer);
+      }, 5000);
+    },
+    debounce: function () {
+      var prevTimout;
+      return function (funcToDebounce) {
+        if (prevTimout) {
+          window.clearTimeout(prevTimout);
+        }
+        prevTimout = window.setTimeout(funcToDebounce, DEBOUNCE_INTERVAL);
+      };
+    },
+    shuffle: function (array) {
+      var currentIndex = array.length;
+      var temporaryValue;
+      var randomIndex;
+      while (currentIndex !== 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+      return array;
+    }
   };
 
   var createErrorContainer = function () {
@@ -28,39 +51,5 @@
     errorContainer.style.right = 0;
     errorContainer.style.fontSize = '30px';
     return errorContainer;
-  };
-
-  window.errorHandler = function (errorMessage) {
-    var errorViewer = createErrorContainer();
-    errorViewer.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', errorViewer);
-    setTimeout(function () {
-      document.body.removeChild(errorViewer);
-    }, 5000);
-  };
-
-  window.debounce = function () {
-    var prevTimout;
-    return function (funcToDebounce) {
-      if (prevTimout) {
-        window.clearTimeout(prevTimout);
-      }
-      prevTimout = window.setTimeout(funcToDebounce, DEBOUNCE_INTERVAL);
-    };
-  };
-
-
-  window.shuffle = function (array) {
-    var currentIndex = array.length;
-    var temporaryValue;
-    var randomIndex;
-    while (currentIndex !== 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
-    }
-    return array;
   };
 })();

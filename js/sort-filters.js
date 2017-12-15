@@ -20,10 +20,10 @@
       });
     },
     'random': function (array) {
-      return window.shuffle(array.slice(0));
+      return window.utility.shuffle(array.slice(0));
     }
   };
-  var debounceHandler = window.debounce();
+  var debounceHandler = window.utility.debounce();
 
   var originalPictures = [];
 

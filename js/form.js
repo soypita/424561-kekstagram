@@ -2,10 +2,9 @@
 
 (function () {
 
-  var COUNT_OF_HASH_TAGS = 5;
-
   var MAX_BLUR = 3;
   var MAX_HEAT = 3;
+  var COUNT_OF_HASH_TAGS = 5;
 
   var DEFAULT_IMAGE_SCALE = 100;
 
@@ -87,27 +86,31 @@
     setUploadImageToDefault();
   };
 
-  var setFilterLevel = function (level) {
-    var effect;
-    switch (currentFilter) {
-      case 'chrome' :
-        effect = 'grayscale(' + level / 100 + ')';
-        break;
-      case 'sepia' :
-        effect = 'sepia(' + level / 100 + ')';
-        break;
-      case 'marvin' :
-        effect = 'invert(' + level + '%)';
-        break;
-      case 'phobos' :
-        effect = 'blur(' + level / 100 * MAX_BLUR + 'px)';
-        break;
-      case 'heat' :
-        effect = 'brightness(' + level / 100 * MAX_HEAT + ')';
-        break;
+  var filterType = {
+    'chrome': function (filterLevel) {
+      return 'grayscale(' + filterLevel / 100 + ')';
+    },
+    'sepia': function (filterLevel) {
+      return 'sepia(' + filterLevel / 100 + ')';
+    },
+    'marvin': function (filterLevel) {
+      return 'invert(' + filterLevel + '%)';
+    },
+    'phobos': function (filterLevel) {
+      return 'blur(' + filterLevel / 100 * MAX_BLUR + 'px)';
+    },
+    'heat': function (filterLevel) {
+      return 'brightness(' + filterLevel / 100 * MAX_HEAT + ')';
+    },
+    'none': function () {
+      filterLevelArea.classList.add('hidden');
     }
+  };
+
+  var setFilterLevel = function (level) {
+    var effect = filterType[currentFilter];
     filterUploadLevelValue.value = level.toFixed();
-    uploadImagePreview.style.filter = effect;
+    uploadImagePreview.style.filter = effect(level);
   };
 
   var currentFilter;
@@ -116,11 +119,7 @@
     if (currentFilter) {
       uploadImagePreview.style.filter = '';
     }
-    if (filterName === INITIAL_IMAGE_FILTER) {
-      filterLevelArea.classList.add('hidden');
-    } else {
-      filterLevelArea.classList.remove('hidden');
-    }
+    filterLevelArea.classList.remove('hidden');
     currentFilter = filterName;
     setFilterLevel(defaultFilterLevel);
     setFilterPinPosition(defaultFilterLevel);

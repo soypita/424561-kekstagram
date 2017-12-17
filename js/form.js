@@ -37,10 +37,12 @@
 
   var checkEvery = function (array, cb) {
     var isValid = true;
-    for (var j = 0; j < array.length; j++) {
-      if (!cb(j)) {
+    var counter = 0;
+    while (isValid && counter < array.length) {
+      if (!cb(counter)) {
         isValid = false;
       }
+      counter++;
     }
     return isValid;
   };
@@ -107,7 +109,7 @@
     }
   };
 
-  var setFilterLevel = function (level) {
+  var setFilterEffect = function (level) {
     var effect = filterType[currentFilter];
     filterUploadLevelValue.value = level.toFixed();
     uploadImagePreview.style.filter = effect(level);
@@ -121,7 +123,7 @@
     }
     filterLevelArea.classList.remove('hidden');
     currentFilter = filterName;
-    setFilterLevel(defaultFilterLevel);
+    setFilterEffect(defaultFilterLevel);
     setFilterPinPosition(defaultFilterLevel);
   };
 
@@ -195,7 +197,7 @@
         startPosition = moveEvt.clientX;
         var newOffset = getPinOffsetOfInPercent(newPosition);
         setFilterPinPosition(newOffset);
-        setFilterLevel(newOffset);
+        setFilterEffect(newOffset);
       }
     };
 

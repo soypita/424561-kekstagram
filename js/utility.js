@@ -5,6 +5,8 @@
 
   var DEBOUNCE_INTERVAL = 500;
 
+  var ERROR_TIMEOUT = 5000;
+
   window.utility = {
     isEscPress: function (keyCode) {
       return keyCode === ESC_KEYCODE;
@@ -15,15 +17,15 @@
       document.body.insertAdjacentElement('afterbegin', errorViewer);
       setTimeout(function () {
         document.body.removeChild(errorViewer);
-      }, 5000);
+      }, ERROR_TIMEOUT);
     },
     debounce: function () {
-      var prevTimout;
+      var prevTimeout;
       return function (funcToDebounce) {
-        if (prevTimout) {
-          window.clearTimeout(prevTimout);
+        if (prevTimeout) {
+          window.clearTimeout(prevTimeout);
         }
-        prevTimout = window.setTimeout(funcToDebounce, DEBOUNCE_INTERVAL);
+        prevTimeout = window.setTimeout(funcToDebounce, DEBOUNCE_INTERVAL);
       };
     },
     shuffle: function (array) {

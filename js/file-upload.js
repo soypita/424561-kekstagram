@@ -9,21 +9,12 @@
   var setFileUploadHandler = function () {
     fileController.addEventListener('change', function () {
       var file = fileController.files[0];
-      var fileType = file.name.toLowerCase().split('.')[1];
 
-      var matches = FILE_TYPES.some(function (it) {
-        return fileType === it;
+      var reader = new FileReader();
+      reader.addEventListener('load', function () {
+        fileContainer.src = reader.result;
       });
-
-      if (matches) {
-        var reader = new FileReader();
-
-        reader.addEventListener('load', function () {
-          fileContainer.src = reader.result;
-        });
-
-        reader.readAsDataURL(file);
-      }
+      reader.readAsDataURL(file);
     });
   };
 

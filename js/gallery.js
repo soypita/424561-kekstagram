@@ -18,5 +18,5 @@
     window.initSortingFilters(sortPicturesHandler, serverPictures);
   };
 
-  window.backend.load(initGallery, window.errorHandler);
+  window.backend.load(initGallery, window.utility.errorHandler);
 })();

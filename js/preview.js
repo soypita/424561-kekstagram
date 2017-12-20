@@ -11,7 +11,7 @@
   };
 
   var onGalleryOverlayKeyPress = function (evt) {
-    if (window.isEscPress(evt.keyCode)) {
+    if (window.utility.isEscPress(evt.keyCode)) {
       closeGalleryOverlay();
       document.removeEventListener('keydown', onGalleryOverlayKeyPress);
     }

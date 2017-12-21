@@ -21,7 +21,7 @@
   window.pictures = {
     createPictures: function (pictures) {
       pictures.forEach(function (pic) {
-        fragment.appendChild(renderPicture(pic);
+        fragment.appendChild(renderPicture(pic));
       });
       return fragment;
     }

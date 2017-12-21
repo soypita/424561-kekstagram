@@ -17,7 +17,7 @@
   };
 
   window.fileUpload = {
-    initUploadFileControl: function (controller, container) {
+    init: function (controller, container) {
       fileController = controller;
       fileContainer = container;
       setFileUploadHandler();

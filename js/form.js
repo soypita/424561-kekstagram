@@ -134,7 +134,7 @@
     elem.style.borderColor = '';
   };
 
-  window.fileUpload.initUploadFileControl(uploadFile, uploadImagePreview);
+  window.fileUpload.init(uploadFile, uploadImagePreview);
 
   uploadFile.addEventListener('change', function () {
     openUploadOverlay();

@@ -28,7 +28,7 @@
   var originalPictures = [];
 
   window.sortFilters = {
-    initSortingFilters: function (cb, pictures) {
+    init: function (cb, pictures) {
       sortCallback = cb;
       sortingFilters.classList.remove('filters-inactive');
       originalPictures = pictures;

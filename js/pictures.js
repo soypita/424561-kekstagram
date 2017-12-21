@@ -19,7 +19,7 @@
   var fragment = document.createDocumentFragment();
 
   window.pictures = {
-    createPictures: function (pictures) {
+    create: function (pictures) {
       pictures.forEach(function (pic) {
         fragment.appendChild(renderPicture(pic));
       });

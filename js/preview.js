@@ -24,7 +24,7 @@
   };
 
   window.preview = {
-    initPicturePreview: function () {
+    init: function () {
       var userPictures = document.querySelectorAll('.picture');
       userPictures.forEach(function (picture) {
         picture.addEventListener('click', function (evt) {

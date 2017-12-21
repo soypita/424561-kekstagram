@@ -6,16 +6,16 @@
   var fillGallery = function (container) {
     pictureGallery.innerHTML = '';
     pictureGallery.appendChild(container);
-    window.preview.initPicturePreview();
+    window.preview.init();
   };
 
   var sortPicturesHandler = function (sortingPictures) {
-    fillGallery(window.pictures.createPictures(sortingPictures));
+    fillGallery(window.pictures.create(sortingPictures));
   };
 
   var initGallery = function (serverPictures) {
-    fillGallery(window.pictures.createPictures(serverPictures));
-    window.sortFilters.initSortingFilters(sortPicturesHandler, serverPictures);
+    fillGallery(window.pictures.create(serverPictures));
+    window.sortFilters.init(sortPicturesHandler, serverPictures);
   };
 
   window.backend.load(initGallery, window.utility.errorHandler);

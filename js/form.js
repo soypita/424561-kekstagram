@@ -134,7 +134,7 @@
     elem.style.borderColor = '';
   };
 
-  window.initUploadFileControl(uploadFile, uploadImagePreview);
+  window.fileUpload.initUploadFileControl(uploadFile, uploadImagePreview);
 
   uploadFile.addEventListener('change', function () {
     openUploadOverlay();
@@ -144,9 +144,9 @@
     closeUploadOverlay();
   });
 
-  window.initializeFilters(uploadEffect, setFilterForUploadImage);
+  window.initializeFilters.init(uploadEffect, setFilterForUploadImage);
 
-  window.initializeScale(uploadScaleControl, setScaleForUploadImage);
+  window.initializeScale.init(uploadScaleControl, setScaleForUploadImage);
 
   uploadPostHashTags.addEventListener('input', function () {
     setElementValid(uploadPostHashTags);

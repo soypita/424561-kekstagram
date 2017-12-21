@@ -18,11 +18,13 @@
 
   var fragment = document.createDocumentFragment();
 
-  window.createPictures = function (pictures) {
-    for (var j = 0; j < pictures.length; j++) {
-      fragment.appendChild(renderPicture(pictures[j]));
+  window.pictures = {
+    createPictures: function (pictures) {
+      pictures.forEach(function (pic) {
+        fragment.appendChild(renderPicture(pic);
+      });
+      return fragment;
     }
-    return fragment;
   };
 
 })();

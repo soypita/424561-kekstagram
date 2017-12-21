@@ -15,17 +15,19 @@
     }
   };
 
-  window.initializeScale = function (scaleControl, cb) {
-    var resizeInc = scaleControl.querySelector('.upload-resize-controls-button-inc');
-    var resizeDec = scaleControl.querySelector('.upload-resize-controls-button-dec');
-    var resizeState = scaleControl.querySelector('.upload-resize-controls-value');
+  window.initializeScale = {
+    init: function (scaleControl, cb) {
+      var resizeInc = scaleControl.querySelector('.upload-resize-controls-button-inc');
+      var resizeDec = scaleControl.querySelector('.upload-resize-controls-button-dec');
+      var resizeState = scaleControl.querySelector('.upload-resize-controls-value');
 
-    resizeInc.addEventListener('click', function () {
-      changeScaleCoeff(resizeState, RESIZE_STEP, cb);
-    });
+      resizeInc.addEventListener('click', function () {
+        changeScaleCoeff(resizeState, RESIZE_STEP, cb);
+      });
 
-    resizeDec.addEventListener('click', function () {
-      changeScaleCoeff(resizeState, -RESIZE_STEP, cb);
-    });
+      resizeDec.addEventListener('click', function () {
+        changeScaleCoeff(resizeState, -RESIZE_STEP, cb);
+      });
+    }
   };
 })();

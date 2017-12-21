@@ -16,9 +16,11 @@
     });
   };
 
-  window.initUploadFileControl = function (controller, container) {
-    fileController = controller;
-    fileContainer = container;
-    setFileUploadHandler();
+  window.fileUpload = {
+    initUploadFileControl: function (controller, container) {
+      fileController = controller;
+      fileContainer = container;
+      setFileUploadHandler();
+    }
   };
 })();

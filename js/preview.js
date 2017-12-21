@@ -23,14 +23,16 @@
     document.addEventListener('keydown', onGalleryOverlayKeyPress);
   };
 
-  window.initPicturePreview = function () {
-    var userPictures = document.querySelectorAll('.picture');
-    userPictures.forEach(function (picture) {
-      picture.addEventListener('click', function (evt) {
-        evt.preventDefault();
-        openGalleryOverlay(evt.currentTarget);
+  window.preview = {
+    initPicturePreview: function () {
+      var userPictures = document.querySelectorAll('.picture');
+      userPictures.forEach(function (picture) {
+        picture.addEventListener('click', function (evt) {
+          evt.preventDefault();
+          openGalleryOverlay(evt.currentTarget);
+        });
       });
-    });
+    }
   };
 
   var closeGalleryOverlay = function () {
@@ -44,7 +46,7 @@
   });
 
   galleryOverlayClose.addEventListener('keydown', function (evt) {
-    if (window.isEnterPress(evt.keyCode)) {
+    if (window.utility.isEnterPress(evt.keyCode)) {
       closeGalleryOverlay();
     }
   });

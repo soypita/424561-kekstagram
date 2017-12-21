@@ -27,10 +27,12 @@
 
   var originalPictures = [];
 
-  window.initSortingFilters = function (cb, pictures) {
-    sortCallback = cb;
-    sortingFilters.classList.remove('filters-inactive');
-    originalPictures = pictures;
+  window.sortFilters = {
+    initSortingFilters: function (cb, pictures) {
+      sortCallback = cb;
+      sortingFilters.classList.remove('filters-inactive');
+      originalPictures = pictures;
+    }
   };
 
   sortingFilters.addEventListener('click', function (evt) {
